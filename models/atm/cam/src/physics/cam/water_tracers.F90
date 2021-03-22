@@ -4072,21 +4072,21 @@ end do     !water tracers
 !-----------------------
 do i=1,ncol
  !Calculate differences:
-  rmass0 = (prec(i,wtrc_iatype(2,iwtvap))-snow(i,wtrc_iatype(2,iwtvap)))
+  pmass0 = prec(i,wtrc_iatype(2,iwtvap))
   smass0 = snow(i,wtrc_iatype(2,iwtvap))
-  rdiff  = rmass0 - (prec(i,wtrc_iatype(1,iwtvap))-snow(i,wtrc_iatype(1,iwtvap)))
-  sdiff  = smass0-snow(i,wtrc_iatype(1,iwtvap))
+  pdiff  = pmass0 - prec(i,wtrc_iatype(1,iwtvap))
+  sdiff  = smass0 - snow(i,wtrc_iatype(1,iwtvap))
   do m=2,wtrc_nwset
-   !Rain errors:
-    Rd = wtrc_ratio(iwspec(wtrc_iatype(m,iwtvap)),(prec(i,wtrc_iatype(m,iwtvap))-snow(i,wtrc_iatype(m,iwtvap))),rmass0)
-    prec(i,wtrc_iatype(m,iwtvap)) = prec(i,wtrc_iatype(m,iwtvap))-Rd*rdiff
+   !Total precip errors:
+    Rd = wtrc_ratio(iwspec(wtrc_iatype(m,iwtvap)),prec(i,wtrc_iatype(m,iwtvap)),pmass0)
+    prec(i,wtrc_iatype(m,iwtvap)) = max(0._r8,prec(i,wtrc_iatype(m,iwtvap))-Rd*pdiff)
    !Snow errors:
     Rd = wtrc_ratio(iwspec(wtrc_iatype(m,iwtvap)),snow(i,wtrc_iatype(m,iwtvap)),smass0)
-    snow(i,wtrc_iatype(m,iwtvap)) = snow(i,wtrc_iatype(m,iwtvap))-Rd*sdiff
-   !Giant error check: 
-   !NOTE:  !Seems to occur about once every seven years. -JN
-   ! if(prec(i,wtrc_iatype(m,iwtvap)) .gt. 10._r8*prec(i,wtrc_iatype(1,iwtvap))) then
-    if(prec(i,wtrc_iatype(m,iwtvap)) .gt. 2._r8*prec(i,wtrc_iatype(1,iwtvap))) then
+    snow(i,wtrc_iatype(m,iwtvap)) = max(0._r8,snow(i,wtrc_iatype(m,iwtvap))-Rd*sdiff)
+   !Giant error check:
+   !NOTE:  !Seems to occur baout once every seven years. -JN
+    if(prec(i,wtrc_iatype(m,iwtvap)) .gt. 10._r8*prec(i,wtrc_iatype(1,iwtvap))) then
+   ! if(prec(i,wtrc_iatype(m,iwtvap)) .gt. 1.5_r8*prec(i,wtrc_iatype(1,iwtvap))) then
       if(prec(i,wtrc_iatype(1,iwtvap)) .gt. wtrc_qmin) &
       write(*,*) 'ERROR:  Isotopic deep-conv precip error!',prec(i,wtrc_iatype(m,iwtvap)),prec(i,wtrc_iatype(1,iwtvap)),&
                   snow(i,wtrc_iatype(m,iwtvap)),snow(i,wtrc_iatype(1,iwtvap)),i,m
