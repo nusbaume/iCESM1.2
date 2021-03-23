@@ -3761,10 +3761,10 @@ real(r8) :: difrm(pwtspec)       !Diffusivity ratio array
 real(r8) :: dkfac                !Diffusivity power law factor
 
 !DEBUGGING:
-integer     :: ispec                    !water isotope species 
+integer     :: ispec                    !water isotope species
 real(r8)    :: dz(pcols,pver)           !layer thickness in height
 real(r8)    :: fequil                   !fraction equilibrated (unitless)
-!real(r8), parameter :: radius=0.001_r8  !assumed diamaeter of raindrop (m) 
+!real(r8), parameter :: radius=0.001_r8  !assumed diamaeter of raindrop (m)
 real(r8)    :: radius                   !assumed radius of raindrop (m)
 
 !Index and loop variables:
@@ -3774,9 +3774,9 @@ integer :: ncol               !Number of atmospheric columns
 integer :: i,k,m              !loop variables
 
 !For precip mass fixer:
-real(r8) :: rdiff
+real(r8) :: pdiff
 real(r8) :: sdiff
-real(r8) :: rmass0
+real(r8) :: pmass0
 real(r8) :: smass0
 real(r8) :: Rd
 
@@ -4084,7 +4084,7 @@ do i=1,ncol
     Rd = wtrc_ratio(iwspec(wtrc_iatype(m,iwtvap)),snow(i,wtrc_iatype(m,iwtvap)),smass0)
     snow(i,wtrc_iatype(m,iwtvap)) = max(0._r8,snow(i,wtrc_iatype(m,iwtvap))-Rd*sdiff)
    !Giant error check:
-   !NOTE:  !Seems to occur baout once every seven years. -JN
+   !NOTE:  !Seems to occur about once every seven years. -JN
     if(prec(i,wtrc_iatype(m,iwtvap)) .gt. 10._r8*prec(i,wtrc_iatype(1,iwtvap))) then
    ! if(prec(i,wtrc_iatype(m,iwtvap)) .gt. 1.5_r8*prec(i,wtrc_iatype(1,iwtvap))) then
       if(prec(i,wtrc_iatype(1,iwtvap)) .gt. wtrc_qmin) &
